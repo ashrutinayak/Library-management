@@ -6,5 +6,11 @@ module.exports = {
     database: process.env.DB_NAME,
     host: "localhost",
     port: process.env.DB_PORT,
-    dialect: "postgres"
+    dialect: "postgres",
+    define: {
+        paranoid: false,
+        timestamps: true,
+        freezeTableName: true,
+        underscored: false
+      },
 }
