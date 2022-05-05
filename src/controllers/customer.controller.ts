@@ -1,7 +1,7 @@
 import { RequestHandler, Request, Response } from "express";
 import sequelize from "sequelize";
 import models from "../config/model.config";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import mailgun from "mailgun-js"; 
 import messageConstant from "../constants/message.constant"
 import bcrypt from "bcrypt"
@@ -58,7 +58,78 @@ const createCustomer:RequestHandler = async(req,res)=>{
             
         }
 }
+
+const activateAccount:RequestHandler = async(req,res)=>{
+        const {token} = req.params;
+        if(!token) return res.status(401).send('No token Found');
+        try{
+            const decodedtoken:any = jwt.verify(token,process.env.JWT_ACC_ACTIVATE!);
+            const {userEmail} = decodedtoken;
+            const user =  await models.User.findOne({where:{Email:userEmail}});
+            user.Status=1;
+            const updUser = await models.User.
+            update({Status:user.Status},{where:{Email:userEmail}});
+            if(updUser)
+            {
+                return res.status(200)
+                      .json({message: "You Account is acctivated successfully"});
+            }
+        }
+        catch(error)
+        {
+            console.log(error);
+            res.status(500).json({
+                error:error,
+            });
+        }
+}
+
+const Login:RequestHandler = async(req,res)=>{
+    try{
+        const User1 = await models.User.findOne({where:{Email:req.body.Email}});
+        if(User1 && User1.Status===1) // User must be in active state 
+        {
+            const isSame = await bcrypt.compare(req.body.Password,User1.Password!);
+            if(isSame)
+            {
+                const userEmail = req.body.Email;
+                const token = jwt.sign({userEmail},process.env.SECRET_KEY!,{expiresIn:'10h'});
+                User1.Token = token;
+                const updUser = await models.User.
+                update({Token:User1.Token,LastLoginAt:new Date()},{where:{Email:userEmail}});
+                if(User1.RoleID===1)
+                {
+                    return res.status(200)
+                    .setHeader("token", token)
+                    .json({ message: "login successful as Customer" });
+                }
+                else if(User1.RoleID===2)
+                {
+                    return res.status(200)
+                    .setHeader("token", token)
+                    .json({ message: "login successful as Librarian" });
+                }
+            }
+            else
+            {
+                return res.status(401)
+                .json({ message: "Invalid Username or Password" });
+            }
+        }
+        return res.json({ message: "Register your account" });
+    }
+    catch(error)
+    {
+        console.log(error);
+            res.status(500).json({
+                error:error,
+            });
+    }
+    
+}
 export default {
-    createCustomer
+    createCustomer,
+    activateAccount,
+    Login
 }
 
