@@ -1,8 +1,20 @@
 import { RequestHandler, Request, Response } from "express";
 import sequelize from "sequelize";
 import models from "../config/model.config";
-import messageConstant from '../constants/message.constant'
+import jwt from "jsonwebtoken";
+import mailgun from "mailgun-js"; 
+import messageConstant from "../constants/message.constant"
 import bcrypt from "bcrypt"
+import {createData, createToken} from "../helpers/mail.helper"
+
+require("dotenv").config();
+
+const DOMAIN: string = process.env.MAILGUN_DOMAIN!;
+const mg = mailgun({
+  apiKey: process.env.MAILGUN_APIKEY!,
+  domain: DOMAIN,
+});
+
 
 const salt: number = 10;
 const createCustomer:RequestHandler = async(req,res)=>{
@@ -19,21 +31,21 @@ const createCustomer:RequestHandler = async(req,res)=>{
         else
         {
             try{
-                console.log("hi");
-                //const userData = await models.User.findAll();
-                //console.log(userData)
                 const alreadyExist = await models.User.findOne({where:{Email:req.body.Email}});
                 if(alreadyExist)
                 {
                     return res.status(303).json({ message: messageConstant.emailAlreadyRegistered });
                 }else{
-                    console.log("hy");
                     req.body.Password = await bcrypt.hash(req.body.Password,salt);
-                    console.log(req.body);
                     const newCust= await models.User.create(req.body);
                     if(newCust)
                     {
-                        res.json(newCust);
+                        const token = createToken(newCust.Email);
+                        const data = createData(newCust.Email, token);
+                        mg.messages().send(data, function (error, body) {
+                            if (error) return res.json({error: error.message});
+                        });
+                        return res.status(200).json({message:"Check Email to Activate Account"});
                     }
                 }
 
