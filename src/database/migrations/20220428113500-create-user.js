@@ -34,12 +34,10 @@ module.exports = {
       },
       RoleID: {
         type: Sequelize.SMALLINT,
-        defaultValue: 1,
         comment: '1:Customer, 2:Librarian, 3:ADMIN'
       },
       Status: {
         type: Sequelize.SMALLINT,
-        defaultValue: 0,
         comment: '0:Inactive, 1:Active, 2:Block'
       },
       Note: {

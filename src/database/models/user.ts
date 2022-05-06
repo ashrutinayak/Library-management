@@ -36,12 +36,10 @@ const UserModel = (sequelize: any, DataTypes: any) => {
           },
           RoleID: {
             type: DataTypes.SMALLINT,
-            defaultValue: 1,
             comment: '1:Customer, 2:Librarian, 3:ADMIN'
           },
           Status: {
             type: DataTypes.SMALLINT,
-            defaultValue: 0,
             comment: '0:Inactive, 1:Active, 2:Block'
           },
           Note: {
@@ -65,6 +63,7 @@ const UserModel = (sequelize: any, DataTypes: any) => {
             type: DataTypes.DATE
           },
           deletedAt: {
+            allowNull: true,
             type: DataTypes.DATE
         }
       },

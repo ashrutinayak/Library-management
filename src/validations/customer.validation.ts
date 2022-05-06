@@ -9,10 +9,10 @@ const createCustomerSchema = {
             Email: Joi.string().required().email().example('harsh@gmail.com')
                     .description('email of Customer'),
             Password: Joi.string().required()
-                //.regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
+                .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
                 .description('password of Customer'),
             Confirm_Password: Joi.string().required()
-                //.regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
+                .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
                 .description('confirmPassword'),
             ProfileImage : Joi.string()
                 .description('Profile Image of  Customer'),

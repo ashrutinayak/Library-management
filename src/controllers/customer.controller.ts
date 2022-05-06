@@ -18,11 +18,9 @@ const mg = mailgun({
 
 const salt: number = 10;
 const createCustomer:RequestHandler = async(req,res)=>{
-        //console.log(req.body);
          req.body.RoleID=1;
          req.body.Status=0;
          req.body.Code="Cus0001";
-         console.log(req.body);
         const confirm = req.body.Password === req.body.Confirm_Password;
         if(!confirm)
         {
@@ -53,9 +51,10 @@ const createCustomer:RequestHandler = async(req,res)=>{
             }
             catch(error){
                     console.log(error);
+                    res.status(500).json({
+                        error:error,
+                    });
             }
-            //console.log(alreadyExist);
-            
         }
 }
 
@@ -90,25 +89,17 @@ const Login:RequestHandler = async(req,res)=>{
         if(User1 && User1.Status===1) // User must be in active state 
         {
             const isSame = await bcrypt.compare(req.body.Password,User1.Password!);
-            if(isSame)
+            if(isSame || (User1.RoleID===3 && req.body.Password===User1.Password!))
             {
                 const userEmail = req.body.Email;
                 const token = jwt.sign({userEmail},process.env.SECRET_KEY!,{expiresIn:'10h'});
                 User1.Token = token;
                 const updUser = await models.User.
                 update({Token:User1.Token,LastLoginAt:new Date()},{where:{Email:userEmail}});
-                if(User1.RoleID===1)
-                {
-                    return res.status(200)
+                   
+                return res.status(200)
                     .setHeader("token", token)
-                    .json({ message: "login successful as Customer" });
-                }
-                else if(User1.RoleID===2)
-                {
-                    return res.status(200)
-                    .setHeader("token", token)
-                    .json({ message: "login successful as Librarian" });
-                }
+                    .json({ message: "login successfully" });
             }
             else
             {
@@ -116,7 +107,7 @@ const Login:RequestHandler = async(req,res)=>{
                 .json({ message: "Invalid Username or Password" });
             }
         }
-        return res.json({ message: "Register your account" });
+        return res.status(400).json({ message: "No User Found with this Email ID" });
     }
     catch(error)
     {
