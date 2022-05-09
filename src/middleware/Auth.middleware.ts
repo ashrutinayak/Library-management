@@ -16,10 +16,13 @@ const login_Authenticate:RequestHandler = async(req,res,next)=>{
         const User1 = await models.User.findOne({where:{Email:userEmail}});
         if(User1 && User1.RoleID===3)
         {
+            console.log('inside auth middleware if');
+            req.body.Admin_ID=User1.id;
             next();
         }
         else
         {
+            console.log('inside auth middleware else');
             return res.status(401).json({message:messageConstant.unauthorizedUser})
         }
     }

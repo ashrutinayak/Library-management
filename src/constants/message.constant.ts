@@ -4,7 +4,13 @@ const messageConstant = {
     newUserCreated: 'New User Created Successfully',
     noUserFound: 'No User Found with this Email ID',
     invalidToken: 'Invalid or Expired Token',
-    unauthorizedUser: 'Unauthorized User'
+    unauthorizedUser: 'Unauthorized User',
+    userUpdated: 'User Updated Successfully',
+    userDeleted: 'User Deleted Successfully',
+    notLibrarian: 'ID does not belongs to Librarian',
+    resetLinksend: 'An Email with Reset Password link is send to your Email ID',
+    passReset: 'Password Updated Successfully',
+    moveToReset: 'Move to Reset Password',
 }
 
 export default messageConstant

@@ -7,14 +7,22 @@ const router: express.Router = express.Router();
 
 const {
     createCustomerSchema,
-    loginCustomerSchema
+    loginCustomerSchema,
+    forgotPasswordSchema,
+    resetPasswordSchema
 } = customerSchema
 
 //Create Customer Route
 router.post('/create_customer',celebrate(createCustomerSchema),customerController.createCustomer);
 //Activate Account Route
-router.post('/activate/:token',customerController.activateAccount);
+router.get('/activate/:token',customerController.activateAccount);
 //Login Route
 router.post('/login',celebrate(loginCustomerSchema),customerController.Login);
+//forgot Password Route
+router.post('/forgot_Password',celebrate(forgotPasswordSchema),customerController.forgotPassword);
+//Confirm Reset
+router.get('/confirm_reset/:token',customerController.confirmReset);
+//Reset Password
+router.post('/reset_Password',celebrate(resetPasswordSchema),customerController.resetPassword);
 
 export=router;

@@ -28,7 +28,24 @@ const loginCustomerSchema = {
                 .description('password of Customer'),
     }
 }
+
+const forgotPasswordSchema = {
+    body:{
+        Email: Joi.string().required().email().example('harsh@gmail.com')
+    }
+}
+
+const resetPasswordSchema = {
+    body:{
+        Email: Joi.string().required().email().example('harsh@gmail.com'),
+        Email2: Joi.string().required().email().example('harsh@gmail.com'),
+        newPassword : Joi.string().required()
+        .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
+    }
+}
 export default {
     createCustomerSchema,
-    loginCustomerSchema
+    loginCustomerSchema,
+    forgotPasswordSchema,
+    resetPasswordSchema
 }

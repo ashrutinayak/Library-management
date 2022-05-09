@@ -32,23 +32,24 @@ const createLibrarian:RequestHandler = async(req,res)=>{
 }
 
 const updateLibrarian:RequestHandler = async(req,res)=>{
-    const token = req.headers.authorization! || req.header('x-auth')!;
-    const upID = req.params.ID;
+    console.log("inside librarian controller");
+    const upID = parseInt(req.params.ID);
     try{
-            const decodedtoken:any = jwt.verify(token,process.env.SECRET_KEY!);
-            const {userEmail} = decodedtoken;
-            const User1 = await models.User.findOne({where:{Email:userEmail}});
-            req.body.UpdateUserID=User1.id;
-            req.body.Password = await bcrypt.hash(req.body.Password,salt);
+            const libUser = await models.User.findOne({where:{id:upID}});
+            if(libUser.RoleID!=2)
+            {
+                res.status(400).json({message:messageConstant.notLibrarian})
+            } 
+            req.body.UpdateUserID=req.body.Admin_ID;
             const updUser = await models.User.
             update({
                 FirstName:req.body.FirstName,
                 LastName:req.body.LastName,
                 ProfileImage:req.body.ProfileImage,
                 UpdateUserID:req.body.UpdateUserID,
-                Email:req.body.Email,
-                Password:req.body.Password
+                Status:req.body.Status
             },{where:{id:upID}})
+            res.status(200).json({message:messageConstant.userUpdated});
     }
     catch(error)
     {
@@ -57,6 +58,32 @@ const updateLibrarian:RequestHandler = async(req,res)=>{
     }
 }
 
+const deleteLibrarian:RequestHandler = async(req,res)=>{
+    const delID=req.params.ID;
+    
+    try{
+        const libUser = await models.User.findOne({where:{id:delID}});
+        if(libUser.RoleID!=2)
+        {
+            res.status(400).json({message:messageConstant.notLibrarian})
+        } 
+        const delUser = await models.User.
+        update({
+            deletedAt:new Date(),
+            UpdateUserID:req.body.Admin_ID
+        },
+        {where:{id:delID}});
+        return res.status(200).json({message:messageConstant.userDeleted});
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).json({error:error.details[0].message,});
+    }
+}
+
 export default {
-    createLibrarian
+    createLibrarian,
+    updateLibrarian,
+    deleteLibrarian
 }
