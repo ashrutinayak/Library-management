@@ -145,6 +145,7 @@ const forgotPassword: RequestHandler = async(req,res)=>{
               .json({ message: messageConstant.noUserFound });
         }
        const token = createToken_fp(uEmail);
+       const updUser = await models.User.update({Token:token},{where:{Email:uEmail}});
        const data = createData_fp(uEmail,token);
        mg.messages().send(data, function (error, body) {
         if (error) return res.json({error: error.message,});
@@ -161,39 +162,44 @@ const forgotPassword: RequestHandler = async(req,res)=>{
     
 }
 
-const confirmReset:RequestHandler = async(req,res,next)=>{
-    const {token} = req.params;
-    try{
-        const decodedtoken:any = jwt.verify(token,process.env.FORGOT_PASSWORD!);
-        const {userEmail} = decodedtoken;
-        req.body.Email2=userEmail;
-        res.status(200).json({message:messageConstant.moveToReset});
-    }
-    catch(error)
-    {
-        console.log(error);
-        res.status(500).json({
-            error:error,
-        });
-    }
-}
+// const confirmReset:RequestHandler = async(req,res,next)=>{
+//     const {token} = req.params;
+//     try{
+//         const decodedtoken:any = jwt.verify(token,process.env.FORGOT_PASSWORD!);
+//         const {userEmail} = decodedtoken;
+//         req.body.Email2=userEmail;
+//         res.status(200).json({message:messageConstant.moveToReset});
+//     }
+//     catch(error)
+//     {
+//         console.log(error);
+//         res.status(500).json({
+//             error:error,
+//         });
+//     }
+// }
 
 const resetPassword:RequestHandler = async(req,res)=>
 {
-    console.log("hello");
     try{
-        if(req.body.Email2!==req.body.Email)
+        const User1 = await models.User.findOne({where:{Email:req.body.Email}});
+        if(User1.Token!==req.body.token)
         {
             res.status(400).json({message:messageConstant.unauthorizedUser});
         }
-        req.body.newPassword = await bcrypt.hash(req.body.newPassword,salt);
-        const updUser = await models.User.update({
-            Password:req.body.Password
-        },{where:{Email:req.body.Email}});
-        if(updUser)
+        else
         {
-            res.status(200).json({message:messageConstant.passReset});
+            req.body.newPassword = await bcrypt.hash(req.body.newPassword,salt);
+            const updUser = await models.User.update({
+                Password:req.body.newPassword,
+                UpdateUserID:User1.id,
+            },{where:{Email:req.body.Email}});
+            if(updUser)
+            {
+                res.status(200).json({message:messageConstant.passReset});
+            }
         }
+        
     }
     catch(error)
     {
@@ -208,7 +214,6 @@ export default {
     activateAccount,
     Login,
     forgotPassword,
-    confirmReset,
     resetPassword
 }
 

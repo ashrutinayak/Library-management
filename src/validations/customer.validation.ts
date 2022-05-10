@@ -37,8 +37,8 @@ const forgotPasswordSchema = {
 
 const resetPasswordSchema = {
     body:{
+        token: Joi.string().required(),
         Email: Joi.string().required().email().example('harsh@gmail.com'),
-        Email2: Joi.string().required().email().example('harsh@gmail.com'),
         newPassword : Joi.string().required()
         .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
     }

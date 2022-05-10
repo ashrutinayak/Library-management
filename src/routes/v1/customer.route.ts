@@ -21,7 +21,7 @@ router.post('/login',celebrate(loginCustomerSchema),customerController.Login);
 //forgot Password Route
 router.post('/forgot_Password',celebrate(forgotPasswordSchema),customerController.forgotPassword);
 //Confirm Reset
-router.get('/confirm_reset/:token',customerController.confirmReset);
+//router.get('/confirm_reset/:token',customerController.confirmReset);
 //Reset Password
 router.post('/reset_Password',celebrate(resetPasswordSchema),customerController.resetPassword);
 

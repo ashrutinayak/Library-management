@@ -10,7 +10,7 @@ export const createData_fp = (userEmail:string, token:string) : typeof data => {
         from : 'noreply@gmail.com',
         to : userEmail,
         subject : 'Reset Password',
-        html : `<a href = "${process.env.CLIENT_URL}/v1/customer/confirm_reset/${token}">Please click Here to Reset Your Password</a>`
+        html :`<p>Here is your token for Reset Password ${token} </p>`// `<a href = "${process.env.CLIENT_URL}/v1/customer/confirm_reset/${token}">Please click Here to Reset Your Password</a>`
     }
     return data;
 }
