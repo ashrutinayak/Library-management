@@ -4,7 +4,7 @@ import messageConstant from "../constants/message.constant";
 import models from "../config/model.config";
 import { nextTick } from "process";
 
-const login_Authenticate:RequestHandler = async(req,res,next)=>{
+const Validate_Admin:RequestHandler = async(req,res,next)=>{
     const token = req.headers.authorization || req.header('x-auth');
     try{
         const decodedtoken:any = jwt.verify(token,process.env.SECRET_KEY!);
@@ -16,13 +16,12 @@ const login_Authenticate:RequestHandler = async(req,res,next)=>{
         const User1 = await models.User.findOne({where:{Email:userEmail}});
         if(User1 && User1.RoleID===3)
         {
-            console.log('inside auth middleware if');
-            req.body.Admin_ID=User1.id;
+            req.body.updater_ID=User1.id;
+            req.body.UserID = User1.id;
             next();
         }
         else
         {
-            console.log('inside auth middleware else');
             return res.status(401).json({message:messageConstant.unauthorizedUser})
         }
     }
@@ -33,4 +32,64 @@ const login_Authenticate:RequestHandler = async(req,res,next)=>{
     }
 }
 
-export default login_Authenticate
+const Validate_Customer:RequestHandler = async(req,res,next)=>{
+    const token = req.headers.authorization || req.header('x-auth');
+    try{
+        const decodedtoken:any = jwt.verify(token,process.env.SECRET_KEY!);
+        if(!decodedtoken)
+        {
+            return res.status(400).json({message:messageConstant.invalidToken})
+        }
+        const {userEmail} = decodedtoken;
+        const User1 = await models.User.findOne({where:{Email:userEmail}});
+        if(User1 && User1.RoleID===1)
+        {
+            req.body.updater_ID=User1.id;
+            req.body.UserID = User1.id;
+            next();
+        }
+        else
+        {
+            return res.status(401).json({message:messageConstant.unauthorizedUser})
+        }
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).json({error:error,});
+    }
+}
+
+const Validate_Librarian:RequestHandler = async(req,res,next)=>{
+    const token = req.headers.authorization || req.header('x-auth');
+    try{
+        const decodedtoken:any = jwt.verify(token,process.env.SECRET_KEY!);
+        if(!decodedtoken)
+        {
+            return res.status(400).json({message:messageConstant.invalidToken})
+        }
+        const {userEmail} = decodedtoken;
+        const User1 = await models.User.findOne({where:{Email:userEmail}});
+        if(User1 && User1.RoleID===2)
+        {
+            req.body.updater_ID=User1.id;
+            req.body.UserID = User1.id;
+            next();
+        }
+        else
+        {
+            return res.status(401).json({message:messageConstant.unauthorizedUser})
+        }
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).json({error:error,});
+    }
+}
+
+export default {
+    Validate_Admin,
+    Validate_Customer,
+    Validate_Librarian
+}

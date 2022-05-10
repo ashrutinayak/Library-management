@@ -2,6 +2,7 @@
 dist/
 logs/
 node_modules/
+public/
 
 # Node artifact files
 package-lock.json

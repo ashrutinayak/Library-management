@@ -14,18 +14,24 @@ const createCustomerSchema = {
             Confirm_Password: Joi.string().required()
                 .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
                 .description('confirmPassword'),
-            ProfileImage : Joi.string()
-                .description('Profile Image of  Customer'),
         }
 }
 
-const loginCustomerSchema = {
+const activateCustomerSchema = {
+    params:{
+        token:Joi.string().required()
+    }
+}
+
+const updateCustomerSchema = {
     body:{
-        Email: Joi.string().required().email().example('harsh@gmail.com')
-                    .description('email of Customer'),
-            Password: Joi.string().required()
-                //.regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
-                .description('password of Customer'),
+        FirstName: Joi.string().example('Harsh')
+            .description('FirstName of Customer'),
+        LastName: Joi.string().example('Tank')
+            .description('LastName of Customer'),
+        ProfileImage: Joi.string(),
+        UserID : Joi.number().integer(),
+        updater_ID : Joi.number().integer()
     }
 }
 
@@ -45,7 +51,8 @@ const resetPasswordSchema = {
 }
 export default {
     createCustomerSchema,
-    loginCustomerSchema,
+    activateCustomerSchema,
     forgotPasswordSchema,
-    resetPasswordSchema
+    resetPasswordSchema,
+    updateCustomerSchema
 }

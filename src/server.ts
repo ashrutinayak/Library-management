@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import routes from './routes/index.route'
 import modelConfig from './config/model.config'
+import multer from 'multer';
 require('dotenv').config();
 
 const corsOptions = {
@@ -15,6 +16,17 @@ export async function createServer(): Promise<core.Express> {
     // Body parsing
     server.use(express.json())
     server.use(express.urlencoded({ extended: false }))
+    const storage = multer.diskStorage({
+      destination: function(req,file,cb)
+      {
+        cb(null,'public/uploads');
+      },
+      filename: function(req,file,cb)
+      {
+        cb(null,Date.now()+file.originalname);
+      }
+    });
+    server.use(multer({storage:storage}).single('file'))
     // api routes
     server.use('/',routes);
     return server

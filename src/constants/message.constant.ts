@@ -11,6 +11,8 @@ const messageConstant = {
     resetLinksend: 'An Email with Reset Password link is send to your Email ID',
     passReset: 'Password Updated Successfully',
     moveToReset: 'Move to Reset Password',
+    emailtoActivateAccount : 'An Email with a Link to Activate Account is Send your Email ID',
+    accountActivated: 'Your Account is Activated Successfully'
 }
 
 export default messageConstant

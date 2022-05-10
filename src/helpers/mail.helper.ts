@@ -1,11 +1,20 @@
 import jwt from "jsonwebtoken";
 import mailgun from "mailgun-js"; 
+import nodemailer from "nodemailer";
 
 require("dotenv").config();
 const DOMAIN: string = process.env.MAILGUN_DOMAIN!;
 export const mg = mailgun({
   apiKey: process.env.MAILGUN_APIKEY!,
   domain: DOMAIN,
+});
+
+export const transporter = nodemailer.createTransport({
+    service: process.env.SERVICE,
+    auth: {
+        user: process.env.USER,
+        pass: process.env.PASS,
+    },
 });
 
 export const createData = (userEmail:string, token:string) : typeof data => {

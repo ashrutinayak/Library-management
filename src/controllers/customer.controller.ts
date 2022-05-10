@@ -2,33 +2,20 @@ import { RequestHandler, Request, Response } from "express";
 import sequelize from "sequelize";
 import models from "../config/model.config";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import nodemailer from "nodemailer";
-import mailgun from "mailgun-js";
 import messageConstant from "../constants/message.constant"
 import bcrypt from "bcrypt"
+import multer from "multer"
 import {createData, createToken, mg} from "../helpers/mail.helper"
 import { createToken_fp, createData_fp } from "../helpers/forgotPass.helper";
 import { nextTick } from "process";
 import { userInfo } from "os";
 
-// require("dotenv").config();
-// const DOMAIN: string = process.env.MAILGUN_DOMAIN!;
-// const mg = mailgun({
-//   apiKey: process.env.MAILGUN_APIKEY!,
-//   domain: DOMAIN,
-// });
-
-// const transporter = nodemailer.createTransport({
-//     service: process.env.SERVICE,
-//     auth: {
-//         user: process.env.USER,
-//         pass: process.env.PASS,
-//     },
-//   });
-  
+//const upload = multer({dest:'public/uploads/'})
 
 const salt: number = 10;
 const createCustomer:RequestHandler = async(req,res)=>{
+         console.log(req.file);
+         req.body.ProfileImage = req.file?.originalname;
          req.body.RoleID=1;
          req.body.Status=0;
          req.body.Code="Cus0001";
@@ -59,7 +46,7 @@ const createCustomer:RequestHandler = async(req,res)=>{
                                 return res.json({error: error.message,});
                             }  
                         });
-                        return res.status(200).json({message:"Check Email to Activate Account"});
+                        return res.status(200).json({message:messageConstant.emailtoActivateAccount});
                     }
                 }
 
@@ -76,7 +63,6 @@ const createCustomer:RequestHandler = async(req,res)=>{
 
 const activateAccount:RequestHandler = async(req,res)=>{
         const {token} = req.params;
-        if(!token) return res.status(401).send('No token Found');
         try{
             const decodedtoken:any = jwt.verify(token,process.env.JWT_ACC_ACTIVATE!);
             const {userEmail} = decodedtoken;
@@ -87,7 +73,7 @@ const activateAccount:RequestHandler = async(req,res)=>{
             if(updUser)
             {
                 return res.status(200)
-                      .json({message: "You Account is acctivated successfully"});
+                      .json({message: messageConstant.accountActivated});
             }
         }
         catch(error)
@@ -99,31 +85,20 @@ const activateAccount:RequestHandler = async(req,res)=>{
         }
 }
 
-const Login:RequestHandler = async(req,res)=>{
+const updateCustomer: RequestHandler = async(req,res)=>{
     try{
-        const User1 = await models.User.findOne({where:{Email:req.body.Email}});
-        if(User1 && User1.Status===1) // User must be in active state 
+        req.body.ProfileImage = req.file?.originalname;
+        const updUser = await models.User.
+        update({
+            FirstName:req.body.FirstName,
+            LastName:req.body.LastName,
+            ProfileImage:req.body.ProfileImage,
+            UpdateUserID:req.body.updater_ID
+        },{where:{id:req.body.UserID}});
+        if(updUser)
         {
-            const isSame = await bcrypt.compare(req.body.Password,User1.Password!);
-            if(isSame || (User1.RoleID===3 && req.body.Password===User1.Password!))
-            {
-                const userEmail = req.body.Email;
-                const token = jwt.sign({userEmail},process.env.SECRET_KEY!,{expiresIn:'10h'});
-                User1.Token = token;
-                const updUser = await models.User.
-                update({Token:User1.Token,LastLoginAt:new Date()},{where:{Email:userEmail}});
-                   
-                return res.status(200)
-                    .setHeader("token", token)
-                    .json({ message: "login successfully" });
-            }
-            else
-            {
-                return res.status(401)
-                .json({ message: "Invalid Username or Password" });
-            }
+            return res.status(200).json({message:messageConstant.userUpdated});
         }
-        return res.status(400).json({ message: "No User Found with this Email ID" });
     }
     catch(error)
     {
@@ -132,7 +107,6 @@ const Login:RequestHandler = async(req,res)=>{
                 error:error,
             });
     }
-    
 }
 
 const forgotPassword: RequestHandler = async(req,res)=>{
@@ -161,23 +135,6 @@ const forgotPassword: RequestHandler = async(req,res)=>{
     }
     
 }
-
-// const confirmReset:RequestHandler = async(req,res,next)=>{
-//     const {token} = req.params;
-//     try{
-//         const decodedtoken:any = jwt.verify(token,process.env.FORGOT_PASSWORD!);
-//         const {userEmail} = decodedtoken;
-//         req.body.Email2=userEmail;
-//         res.status(200).json({message:messageConstant.moveToReset});
-//     }
-//     catch(error)
-//     {
-//         console.log(error);
-//         res.status(500).json({
-//             error:error,
-//         });
-//     }
-// }
 
 const resetPassword:RequestHandler = async(req,res)=>
 {
@@ -212,8 +169,8 @@ const resetPassword:RequestHandler = async(req,res)=>
 export default {
     createCustomer,
     activateAccount,
-    Login,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    updateCustomer
 }
 
