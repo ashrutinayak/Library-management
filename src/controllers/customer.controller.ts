@@ -1,20 +1,16 @@
 import { RequestHandler, Request, Response } from "express";
-import sequelize from "sequelize";
 import models from "../config/model.config";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import messageConstant from "../constants/message.constant"
 import bcrypt from "bcrypt"
-import multer from "multer"
-import {createData, createToken, mg} from "../helpers/mail.helper"
+import {createData, createToken,transporter} from "../helpers/mail.helper"
 import { createToken_fp, createData_fp } from "../helpers/forgotPass.helper";
 import { nextTick } from "process";
 import { userInfo } from "os";
-
-//const upload = multer({dest:'public/uploads/'})
+require("dotenv").config();
 
 const salt: number = 10;
 const createCustomer:RequestHandler = async(req,res)=>{
-         console.log(req.file);
          req.body.ProfileImage = req.file?.originalname;
          req.body.RoleID=1;
          req.body.Status=0;
@@ -40,13 +36,14 @@ const createCustomer:RequestHandler = async(req,res)=>{
                     {
                         const token = createToken(newCust.Email);
                         const data = createData(newCust.Email, token);
-                        mg.messages().send(data, function (error, body) {
-                            if (error)
-                            {
-                                return res.json({error: error.message,});
-                            }  
+                        transporter.sendMail(data, function (error, body) {
+                        if (error)
+                        {
+                            return res.status(400).json({error: error.message,});
+                        }  
                         });
                         return res.status(200).json({message:messageConstant.emailtoActivateAccount});
+                        
                     }
                 }
 
@@ -121,7 +118,7 @@ const forgotPassword: RequestHandler = async(req,res)=>{
        const token = createToken_fp(uEmail);
        const updUser = await models.User.update({Token:token},{where:{Email:uEmail}});
        const data = createData_fp(uEmail,token);
-       mg.messages().send(data, function (error, body) {
+       transporter.sendMail(data, function (error, body) {
         if (error) return res.json({error: error.message,});
       });
       return res.status(200).json({message:messageConstant.resetLinksend});

@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import mailgun from "mailgun-js"; 
 import nodemailer from "nodemailer";
+import SMTPTransport from "nodemailer";
 
 require("dotenv").config();
 const DOMAIN: string = process.env.MAILGUN_DOMAIN!;
@@ -9,13 +10,20 @@ export const mg = mailgun({
   domain: DOMAIN,
 });
 
-export const transporter = nodemailer.createTransport({
-    service: process.env.SERVICE,
+interface MailtrapTransporter {
+    host:string
+}
+
+export const transporter = SMTPTransport.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: true,
     auth: {
-        user: process.env.USER,
-        pass: process.env.PASS,
+        user: "harshptank2212@gmail.com",
+        pass: "rhuejqwjjnksgjoz",
     },
-});
+} as MailtrapTransporter);
 
 export const createData = (userEmail:string, token:string) : typeof data => {
     const data = {

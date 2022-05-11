@@ -79,6 +79,18 @@ const adminDeleteLibrarian:RequestHandler = async(req,res)=>{
     }
 }
 
+const adminGetAllLibrarian:RequestHandler = async(req,res)=>{
+    try{
+        const AllUser = await models.User.findAll({where:{RoleID:2}});
+        return res.status(200).json(AllUser);
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).json({ error:error,});
+    }
+}
+
 const updateAdmin: RequestHandler = async(req,res)=>{
     try{
         req.body.ProfileImage = req.file?.originalname;
@@ -107,5 +119,6 @@ export default {
     adminCreateLibrarian,
     adminUpdateLibrarian,
     adminDeleteLibrarian,
-    updateAdmin
+    adminGetAllLibrarian,
+    updateAdmin,
 }

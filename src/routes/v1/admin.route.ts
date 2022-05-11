@@ -14,11 +14,17 @@ const {
 const router: express.Router = express.Router();
 
 //Admin Creates Librarian
-router.post('/create_librarian',Authenticate.Validate_Admin,celebrate(adminCreateLibrarianSchema),adminController.adminCreateLibrarian);
+router.post('/create_librarian',Authenticate.Validate_Admin,
+celebrate(adminCreateLibrarianSchema),adminController.adminCreateLibrarian);
 //Admin Updates Librarian
-router.put('/update_librarian/:ID',Authenticate.Validate_Admin,celebrate(adminUpdateLibrarianSchema),adminController.adminUpdateLibrarian);
+router.put('/update_librarian/:ID',Authenticate.Validate_Admin,
+celebrate(adminUpdateLibrarianSchema),adminController.adminUpdateLibrarian);
 //Admin Deletes Librarian
-router.put('/delete_librarian/:ID',Authenticate.Validate_Admin,celebrate(adminDeleteLibrarianSchema),adminController.adminDeleteLibrarian);
+router.put('/delete_librarian/:ID',Authenticate.Validate_Admin,
+celebrate(adminDeleteLibrarianSchema),adminController.adminDeleteLibrarian);
+//Get all Librarian By Admin
+router.get('/getAll_librarian',Authenticate.Validate_Admin,
+adminController.adminGetAllLibrarian);
 //Update Admin
 router.put('/update_admin',Authenticate.Validate_Admin,celebrate(updateAdminSchema),adminController.updateAdmin);
 
