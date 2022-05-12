@@ -11,7 +11,8 @@ require("dotenv").config();
 
 const salt: number = 10;
 const createCustomer:RequestHandler = async(req,res)=>{
-         req.body.ProfileImage = req.file?.originalname;
+         req.body.ProfileImage = req.file?.filename;
+         console.log(req.body.ProfileImage);
          req.body.RoleID=1;
          req.body.Status=0;
          req.body.Code="Cus0001";
@@ -56,6 +57,20 @@ const createCustomer:RequestHandler = async(req,res)=>{
                     });
             }
         }
+}
+
+const getAllUsers: RequestHandler = async(req,res)=>{
+    try{
+        const allUser = await models.User.findAll();
+        return res.status(200).json(allUser);
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).json({
+            error:error,
+        });
+    }
 }
 
 const activateAccount:RequestHandler = async(req,res)=>{
@@ -165,6 +180,7 @@ const resetPassword:RequestHandler = async(req,res)=>
 }
 export default {
     createCustomer,
+    getAllUsers,
     activateAccount,
     forgotPassword,
     resetPassword,

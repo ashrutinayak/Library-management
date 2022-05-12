@@ -18,12 +18,13 @@ const {
 router.post('/create_customer',celebrate(createCustomerSchema),customerController.createCustomer);
 //Activate Account Route
 router.get('/activate/:token',celebrate(activateCustomerSchema),customerController.activateAccount);
-//Login Route
-//router.post('/login',celebrate(loginCustomerSchema),loginController.Login);
-//forgot Password Route
+//Get All User
+router.get('/getAllUsers',customerController.getAllUsers);
+//Forget Password
 router.post('/forgot_Password',celebrate(forgotPasswordSchema),customerController.forgotPassword);
 //Reset Password
 router.post('/reset_Password',celebrate(resetPasswordSchema),customerController.resetPassword);
 //update Customer
 router.put('/update_customer',Authenticate.Validate_Customer,celebrate(updateCustomerSchema),customerController.updateCustomer)
+
 export=router;
