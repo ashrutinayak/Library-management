@@ -6,7 +6,6 @@ const updateLibrarianSchema = {
         LastName: Joi.string(),
         ProfileImage : Joi.string(),
         UserID : Joi.number().integer(),
-        updater_ID: Joi.number().integer(),
     }
 }
 

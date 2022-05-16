@@ -8,7 +8,7 @@ module.exports = {
       [
         {
           id:1,
-          Code:'ADM001',
+          Code:`AU_${Date.now()}_${Math.floor(Math.random()*10000)}`,
           FirstName:'ABC',
           LastName:'XYZ',
           Email:'tank.meena8@gmail.com',

@@ -16,11 +16,11 @@ const {
 router.post('/create_book',Authenticate.Validate_Admin_or_Librarian,
 celebrate(createBookSchema),bookController.createBook);
 //update Book route
-router.put('/update_book',Authenticate.Validate_Admin_or_Librarian,
+router.put('/update_book/:id',Authenticate.Validate_Admin_or_Librarian,
 celebrate(updateBookSchema),bookController.updateBook);
 //delete Book route
-router.put('/delete_book',Authenticate.Validate_Admin_or_Librarian,
-celebrate(delBookSchema),bookController.deleteBookSchema);
+router.put('/delete_book/:id',Authenticate.Validate_Admin_or_Librarian,
+celebrate(delBookSchema),bookController.deleteBook);
 //get All book route
 router.get('/get_Allbook',Authenticate.Validate_Admin_or_Librarian,
 bookController.getAllBooks);

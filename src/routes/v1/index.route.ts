@@ -7,6 +7,7 @@ import login from "./login.route";
 import bookAuthor from "./bookAuthor.route";
 import bookCategory from "./bookCategory.route"
 import book from "./book.route";
+import issuedBook from "./issuedBook.route";
 const router: express.Router = express.Router();
 
 //login & Sinup APIs
@@ -17,6 +18,7 @@ router.use('/login',login);
 router.use('/bookAuthor',bookAuthor);
 router.use('/bookCategory',bookCategory);
 router.use('/book',book);
+router.use('/issuedBook',issuedBook);
 
 export default router;
  

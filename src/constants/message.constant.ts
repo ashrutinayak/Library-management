@@ -20,7 +20,14 @@ const messageConstant = {
     categoryDeleted: 'Book Category Deleted',
     nocategoryFoundwithid:'No Book Category Found With this ID',
     newBookCreated: 'New Book Created Successfully',
+    BookUpd:'Book Updated Successfully',
+    BookDel:'Book Deleted Successfully',
     noBookFound:'No book Exist With this ID',
+    LimitExceeded:'Cannot Issue New Book Becauese you have Already Issued 5 or more Books',
+    newBookIssued:'New Book Issued Successfully',
+    outofstock:'Book is out of Stock',
+    bookRenewed:'Book Renewed Successfully'
+    
 }
 
 export default messageConstant

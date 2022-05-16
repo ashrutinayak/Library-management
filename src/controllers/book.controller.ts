@@ -3,7 +3,7 @@ import models from "../config/model.config";
 import messageConstant from "../constants/message.constant"
 
 const createBook: RequestHandler = async(req,res)=>{
-    req.body.code='Book0001';
+    req.body.code=`BK_${Date.now()}_${Math.floor(Math.random()*10000)}`;
     req.body.createdUserID=req.body.UserID;
     try{
         const newBook = await models.Book.create(req.body);
@@ -39,6 +39,10 @@ const updateBook:RequestHandler = async(req,res)=>{
             updatedUserID:req.body.UserID
         },
         {where:{id:upID}});
+        if(updBook)
+        {
+            return res.status(200).json({message:messageConstant.BookUpd});
+        }
     }
     catch(error)
     {
@@ -47,7 +51,7 @@ const updateBook:RequestHandler = async(req,res)=>{
     }
 }
 
-const deleteBookSchema:RequestHandler = async(req,res)=>{
+const deleteBook:RequestHandler = async(req,res)=>{
     const delID = req.params.id;
     try{
         const findBook = await models.Book.findOne({where:{id:delID}});
@@ -60,6 +64,10 @@ const deleteBookSchema:RequestHandler = async(req,res)=>{
             deletedAt:new Date()
         },
         {where:{id:delID}});
+        if(delBook)
+        {
+            return res.status(200).json({message:messageConstant.BookDel});
+        }
     }
     catch(error)
     {
@@ -84,6 +92,6 @@ const getAllBooks:RequestHandler = async(req,res)=>{
 export default {
     createBook,
     updateBook,
-    deleteBookSchema,
+    deleteBook,
     getAllBooks
 }

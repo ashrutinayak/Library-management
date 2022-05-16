@@ -72,7 +72,6 @@ const Validate_Librarian:RequestHandler = async(req,res,next)=>{
         const User1 = await models.User.findOne({where:{Email:userEmail}});
         if(User1 && User1.RoleID===2)
         {
-            req.body.updater_ID=User1.id;
             req.body.UserID = User1.id;
             next();
         }
