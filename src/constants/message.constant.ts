@@ -18,7 +18,9 @@ const messageConstant = {
     categoryCreated: 'Book Category Created',
     categoryUpdated: 'Book Category Updated',
     categoryDeleted: 'Book Category Deleted',
-    nocategoryFoundwithid:'No Book Category Found With this ID'
+    nocategoryFoundwithid:'No Book Category Found With this ID',
+    newBookCreated: 'New Book Created Successfully',
+    noBookFound:'No book Exist With this ID',
 }
 
 export default messageConstant

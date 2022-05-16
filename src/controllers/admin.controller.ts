@@ -1,8 +1,7 @@
 import { RequestHandler, Request, Response } from "express";
 import sequelize from "sequelize";
 import models from "../config/model.config";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import mailgun from "mailgun-js"; 
+import jwt, { JwtPayload } from "jsonwebtoken"; 
 import messageConstant from "../constants/message.constant"
 import bcrypt from "bcrypt"
 
