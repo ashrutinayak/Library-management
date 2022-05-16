@@ -14,12 +14,15 @@ const issueBook : RequestHandler = async(req,res)=>{
             const alreadyIssued = await models.issuedBook.findOne({where:{bookID:BkId,customerUserID:req.body.customerUserID}});
             if(alreadyIssued)
             {
+                const endDate = new Date();
+                endDate.setDate(endDate.getDate()+10);
                 const renewentry = await models.issuedBook.create({
                   renewIssuedBookID:alreadyIssued.id,
                   bookID:BkId,
                   customerUserID:req.body.customerUserID,
                   librarianUserID:req.body.UserID,
                   startDateTime:Date.now(),
+                  endDateTime:endDate,
                   status:2
                 })
                 if(renewentry)
@@ -41,11 +44,14 @@ const issueBook : RequestHandler = async(req,res)=>{
                 {
                   if(findBk.inStock>0)
                   {
+                    const endDate = new Date();
+                    endDate.setDate(endDate.getDate()+10);
                     const newentry = await models.issuedBook.create({
                       bookID:BkId,
                       customerUserID:req.body.customerUserID,
                       librarianUserID:req.body.UserID,
                       startDateTime:Date.now(),
+                      endDateTime:endDate,
                       status:1
                     })
                     const updBK = await models.Book.update({
