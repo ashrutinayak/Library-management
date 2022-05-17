@@ -6,9 +6,19 @@ import issuedBookSchema from "../../validations/issuedBook.validation";
 
 const router: express.Router = express.Router();
 
-const {issueBookSchema} = issuedBookSchema
+const {
+    issueBookSchema,
+    submitBookSchema,
+    lostBookSchema
+    } = issuedBookSchema
 
 router.post('/issue_book',Authenticate.Validate_Librarian,
 celebrate(issueBookSchema),issuedBookController.issueBook);
+
+router.post('/submit_book',Authenticate.Validate_Librarian,
+celebrate(submitBookSchema),issuedBookController.submitBook);
+
+router.post('/lost_book',Authenticate.Validate_Librarian,
+celebrate(lostBookSchema),issuedBookController.lostBook);
 
 export = router;
