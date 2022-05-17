@@ -15,7 +15,7 @@ const createCustomer:RequestHandler = async(req,res)=>{
          console.log(req.body.ProfileImage);
          req.body.RoleID=1;
          req.body.Status=0;
-         req.body.Code="Cus0001";
+         req.body.Code=`CU_${Date.now()}_${Math.floor(Math.random()*10000)}`;//"CU_"+Date.now()+Math.floor(Math.random()*10000);
         const confirm = req.body.Password === req.body.Confirm_Password;
         if(!confirm)
         {

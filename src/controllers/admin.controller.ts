@@ -11,7 +11,7 @@ const adminCreateLibrarian:RequestHandler = async(req,res)=>{
             req.body.ProfileImage=req.file?.originalname;
             req.body.RoleID=2;
             req.body.Status=1;
-            req.body.Code="LIB0001";
+            req.body.Code=`LU_${Date.now()}_${Math.floor(Math.random()*10000)}`;
             req.body.Password = await bcrypt.hash(req.body.Password,salt);
             req.body.UpdateUserID=req.body.updater_ID;
             const newLib= await models.User.create(req.body);

@@ -10,7 +10,7 @@ const updateLibrarian:RequestHandler = async(req,res)=>{
             FirstName:req.body.FirstName,
             LastName:req.body.LastName,
             ProfileImage:req.body.ProfileImage,
-            UpdateUserID:req.body.updater_ID
+            UpdateUserID:req.body.UserID
         },{where:{id:req.body.UserID}});
         if(updUser)
         {

@@ -1,9 +1,10 @@
 import {Joi} from 'celebrate';
+import { INTEGER } from 'sequelize';
 const createBookSchema = {
     body:{
         name:Joi.string().required(),
         description:Joi.string(),
-        inStock:Joi.string().required(),
+        inStock:Joi.number().integer().required(),
         bookAuthorID:Joi.number().integer().required(),
         bookCategoryID:Joi.number().integer().required(),
         UserID:Joi.number().integer().required()
@@ -17,7 +18,7 @@ const updateBookSchema = {
     body:{
         name:Joi.string(),
         description:Joi.string(),
-        inStock:Joi.string(),
+        inStock:Joi.number().integer(),
         bookAuthorID:Joi.number().integer(),
         bookCategoryID:Joi.number().integer(),
         UserID:Joi.number().integer().required()
