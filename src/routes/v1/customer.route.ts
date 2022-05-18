@@ -11,7 +11,8 @@ const {
     activateCustomerSchema,
     forgotPasswordSchema,
     resetPasswordSchema,
-    updateCustomerSchema
+    updateCustomerSchema,
+    customerIssueBookHistorySchema
 } = customerSchema
 
 //Create Customer Route
@@ -21,10 +22,16 @@ router.get('/activate/:token',celebrate(activateCustomerSchema),customerControll
 //Get All User
 router.get('/getAllUsers',customerController.getAllUsers);
 //Forget Password
-router.post('/forgot_Password',celebrate(forgotPasswordSchema),customerController.forgotPassword);
+router.post('/forgot_Password',celebrate(forgotPasswordSchema),
+customerController.forgotPassword);
 //Reset Password
-router.post('/reset_Password',celebrate(resetPasswordSchema),customerController.resetPassword);
+router.post('/reset_Password',celebrate(resetPasswordSchema),
+customerController.resetPassword);
 //update Customer
-router.put('/update_customer',Authenticate.Validate_Customer,celebrate(updateCustomerSchema),customerController.updateCustomer)
+router.put('/update_customer',Authenticate.Validate_Customer,
+celebrate(updateCustomerSchema),customerController.updateCustomer);
+//Show Book Issue History
+router.post('/show_issue_history',Authenticate.Validate_Customer,
+celebrate(customerIssueBookHistorySchema),customerController.customerIssueBookHistory);
 
 export=router;

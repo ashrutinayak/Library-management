@@ -24,5 +24,7 @@ celebrate(delBookSchema),bookController.deleteBook);
 //get All book route
 router.get('/get_Allbook',Authenticate.Validate_Admin_or_Librarian,
 bookController.getAllBooks);
+//get All book with related Data
+router.get('/get_Allbook_with_data',bookController.getAllBooksWithData);
 
 export =router;

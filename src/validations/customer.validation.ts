@@ -49,10 +49,18 @@ const resetPasswordSchema = {
         .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
     }
 }
+
+const customerIssueBookHistorySchema = {
+    body:{
+        status:Joi.number().integer(),
+        UserID : Joi.number().integer()
+    }
+}
 export default {
     createCustomerSchema,
     activateCustomerSchema,
     forgotPasswordSchema,
     resetPasswordSchema,
-    updateCustomerSchema
+    updateCustomerSchema,
+    customerIssueBookHistorySchema
 }

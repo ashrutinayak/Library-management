@@ -46,6 +46,9 @@ const issuedBookModel = (sequelize: any, DataTypes: any) => {
           endDateTime: {
             type: DataTypes.DATE
           },
+          submitDateTime:{
+            type: DataTypes.DATE
+          },
           status: {
             type: DataTypes.SMALLINT,
             comment: '1:Issued, 2:Renew, 3:Submitted, 4:Lost'

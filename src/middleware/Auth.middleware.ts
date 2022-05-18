@@ -44,7 +44,6 @@ const Validate_Customer:RequestHandler = async(req,res,next)=>{
         const User1 = await models.User.findOne({where:{Email:userEmail}});
         if(User1 && User1.RoleID===1)
         {
-            req.body.updater_ID=User1.id;
             req.body.UserID = User1.id;
             next();
         }
