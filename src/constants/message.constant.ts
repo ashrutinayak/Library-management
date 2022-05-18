@@ -26,8 +26,11 @@ const messageConstant = {
     LimitExceeded:'Cannot Issue New Book Becauese you have Already Issued 5 or more Books',
     newBookIssued:'New Book Issued Successfully',
     outofstock:'Book is out of Stock',
-    bookRenewed:'Book Renewed Successfully'
-    
+    bookRenewed:'Book Renewed Successfully',
+    currentlynotavailable:'Book Currently Not Available',
+    Notissued:'User has not issued this Book',
+    bookSubmitted:'Book Submitted Successfully',
+    bookLost:'Book Lost Request Registered'
 }
 
 export default messageConstant
