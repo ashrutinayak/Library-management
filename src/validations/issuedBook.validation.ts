@@ -23,8 +23,9 @@ const lostBookSchema = {
         UserID:Joi.number().integer()
     }
 }
+
 export default {
     issueBookSchema,
     submitBookSchema,
-    lostBookSchema
+    lostBookSchema,
 }

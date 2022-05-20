@@ -9,7 +9,7 @@ const router: express.Router = express.Router();
 const {
     issueBookSchema,
     submitBookSchema,
-    lostBookSchema
+    lostBookSchema,
     } = issuedBookSchema
 
 router.post('/issue_book',Authenticate.Validate_Librarian,
@@ -20,5 +20,8 @@ celebrate(submitBookSchema),issuedBookController.submitBook);
 
 router.post('/lost_book',Authenticate.Validate_Librarian,
 celebrate(lostBookSchema),issuedBookController.lostBook);
+
+router.post('/issue_filter',Authenticate.Validate_Admin_or_Librarian,
+issuedBookController.bookFilterFeatures);
 
 export = router;
