@@ -9,7 +9,8 @@ const createBookAuthor: RequestHandler = async(req,res)=>{
         const User1 = await models.bookAuthor.create(req.body);
         if(User1)
         {
-            return res.status(200).json({message:messageConstant.newUserCreated});
+            return res.status(200).json({message:messageConstant.newUserCreated,
+            book_author:User1});
         }
     }
     catch(error)

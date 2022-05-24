@@ -13,11 +13,12 @@ const adminCreateLibrarian:RequestHandler = async(req,res)=>{
             req.body.Status=1;
             req.body.Code=`LU_${Date.now()}_${Math.floor(Math.random()*10000)}`;
             req.body.Password = await bcrypt.hash(req.body.Password,salt);
-            req.body.UpdateUserID=req.body.updater_ID;
+            req.body.UpdateUserID=req.body.UserID;
             const newLib= await models.User.create(req.body);
             if(newLib)
             {
-                return res.status(200).json({message:messageConstant.newUserCreated});
+                return res.status(200).json({message:messageConstant.newUserCreated,
+                user:newLib});
             }
     }
     catch(error)
@@ -42,7 +43,7 @@ const adminUpdateLibrarian:RequestHandler = async(req,res)=>{
                 FirstName:req.body.FirstName,
                 LastName:req.body.LastName,
                 ProfileImage:req.body.ProfileImage,
-                UpdateUserID:req.body.UpdateUserID,
+                UpdateUserID:req.body.UserID,
                 Status:req.body.Status
             },{where:{id:upID}})
             res.status(200).json({message:messageConstant.userUpdated});
@@ -66,7 +67,7 @@ const adminDeleteLibrarian:RequestHandler = async(req,res)=>{
         const delUser = await models.User.
         update({
             deletedAt:new Date(),
-            UpdateUserID:req.body.updater_ID
+            UpdateUserID:req.body.UserID
         },
         {where:{id:delID}});
         return res.status(200).json({message:messageConstant.userDeleted});
@@ -98,11 +99,12 @@ const updateAdmin: RequestHandler = async(req,res)=>{
             FirstName:req.body.FirstName,
             LastName:req.body.LastName,
             ProfileImage:req.body.ProfileImage,
-            UpdateUserID:req.body.updater_ID
+            UpdateUserID:req.body.UserID
         },{where:{id:req.body.UserID}});
         if(updUser)
         {
-            return res.status(200).json({message:messageConstant.userUpdated});
+            return res.status(200).json({message:messageConstant.userUpdated,
+            user:updUser});
         }
     }
     catch(error)
