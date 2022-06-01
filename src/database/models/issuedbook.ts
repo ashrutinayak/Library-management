@@ -41,10 +41,13 @@ const issuedBookModel = (sequelize: any, DataTypes: any) => {
             onDelete: 'CASCADE'
           },
           startDateTime: {
-            type: DataTypes.DATE
+            type: DataTypes.DATEONLY
           },
           endDateTime: {
-            type: DataTypes.DATE
+            type: DataTypes.DATEONLY
+          },
+          submitDateTime:{
+            type: DataTypes.DATEONLY
           },
           status: {
             type: DataTypes.SMALLINT,

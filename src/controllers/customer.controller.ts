@@ -105,7 +105,7 @@ const updateCustomer: RequestHandler = async(req,res)=>{
             FirstName:req.body.FirstName,
             LastName:req.body.LastName,
             ProfileImage:req.body.ProfileImage,
-            UpdateUserID:req.body.updater_ID
+            UpdateUserID:req.body.UserID
         },{where:{id:req.body.UserID}});
         if(updUser)
         {
@@ -178,12 +178,37 @@ const resetPassword:RequestHandler = async(req,res)=>
         });
     }
 }
+
+const customerIssueBookHistory:RequestHandler = async(req,res)=>{
+    try{
+        const allBks = await models.issuedBook.findAll({where:{
+            customerUserID:req.body.UserID,
+            status:req.body.status
+        },
+        order: [
+            ['updatedAt', 'DESC'],
+        ]
+    })
+        if(allBks)
+        {
+            return res.status(200).json({allBks});
+        }
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).json({
+            error:error,
+        });
+    }
+}
 export default {
     createCustomer,
     getAllUsers,
     activateAccount,
     forgotPassword,
     resetPassword,
-    updateCustomer
+    updateCustomer,
+    customerIssueBookHistory
 }
 

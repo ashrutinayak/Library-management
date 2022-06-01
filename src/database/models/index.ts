@@ -24,10 +24,6 @@ const models: any = {
       db.bookCategory.hasMany(db.Book,{ foreignKey: 'bookCategoryID' });
       //book belongs to one category
       db.Book.belongsTo(db.bookCategory,{ foreignKey: 'bookCategoryID' });
-      //User can issue many book
-      db.User.belongsToMany(db.Book,{through:db.issuedBook, foreignKey:'bookID'});
-      //Book can be issued by many Users
-      db.Book.belongsToMany(db.User,{through:db.issuedBook, foreignKey:'customerUserID'})
       return db;
   }
 }

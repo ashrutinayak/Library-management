@@ -7,7 +7,6 @@ const adminCreateLibrarianSchema = {
         Password: Joi.string().required()
             .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/),
         ProfileImage : Joi.string(),
-        updater_ID: Joi.number().integer(),
         UserID : Joi.number().integer(),
     }
 }
@@ -20,7 +19,6 @@ const adminUpdateLibrarianSchema = {
         FirstName: Joi.string(),
         LastName: Joi.string(),
         ProfileImage : Joi.string(),
-        updater_ID: Joi.number().integer(),
         UserID : Joi.number().integer(),
         Status: Joi.number().integer()
     }
@@ -30,7 +28,6 @@ const adminDeleteLibrarianSchema = {
         ID: Joi.number().required()
     },
     body:{
-        updater_ID: Joi.number().integer(),
         UserID : Joi.number().integer(),
     }
 }
@@ -41,7 +38,6 @@ const updateAdminSchema = {
         LastName: Joi.string(),
         ProfileImage : Joi.string(),
         UserID : Joi.number().integer(),
-        updater_ID: Joi.number().integer(),
     }
 }
 

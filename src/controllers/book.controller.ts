@@ -2,6 +2,15 @@ import { RequestHandler, Request, Response } from "express";
 import models from "../config/model.config";
 import messageConstant from "../constants/message.constant"
 
+type displaydata = {
+    bookName:string,
+    author:string,
+    bookCategory:string,
+    inStock:number,
+    currentlyAvailable:number
+}
+
+
 const createBook: RequestHandler = async(req,res)=>{
     req.body.code=`BK_${Date.now()}_${Math.floor(Math.random()*10000)}`;
     req.body.createdUserID=req.body.UserID;
@@ -89,9 +98,44 @@ const getAllBooks:RequestHandler = async(req,res)=>{
 
 }
 
+const getAllBooksWithData: RequestHandler = async(req,res)=>{
+    try{
+        const displayRequest: displaydata[]=[];
+        const getAllBks = await models.Book.findAll({
+            include:[
+                models.bookAuthor,
+                models.bookCategory
+            ]});
+        if(getAllBks)
+        {
+            for(const x in getAllBks)
+            {
+                const occupied = await models.issuedBook.findAll({where:{
+                    bookID:getAllBks[x].id,
+                    status:1
+                }})
+                displayRequest.push({
+                    bookName:getAllBks[x].name,
+                    author:getAllBks[x].bookAuthor.name,
+                    bookCategory:getAllBks[x].bookCategory.name,
+                    inStock:getAllBks[x].inStock,
+                    currentlyAvailable:(getAllBks[x].inStock-occupied.length)
+                })
+            }
+            return res.status(200).json({displayRequest});
+        }
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).json({error:error,});
+    }
+}
+
 export default {
     createBook,
     updateBook,
     deleteBook,
-    getAllBooks
+    getAllBooks,
+    getAllBooksWithData
 }

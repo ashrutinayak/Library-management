@@ -9,7 +9,8 @@ const createBookCategory: RequestHandler = async(req,res)=>{
         const User1 = await models.bookCategory.create(req.body);
         if(User1)
         {
-            return res.status(200).json({message:messageConstant.categoryCreated});
+            return res.status(200).json({message:messageConstant.categoryCreated,
+            category:User1});
         }
     }
     catch(error)
