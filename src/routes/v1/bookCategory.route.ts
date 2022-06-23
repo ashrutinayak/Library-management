@@ -1,5 +1,4 @@
 import express from "express"; 
-import { Request, Response, RequestHandler } from "express";
 import { celebrate } from 'celebrate';
 import book_categoryController from "../../controllers/book_category.controller";
 import book_categorySchema from "../../validations/book_category.validation";
@@ -13,19 +12,20 @@ const {
 } = book_categorySchema
 
 //Create Book category
-router.post('/create_bookCategory',Authenticate.Validate_Admin_or_Librarian,
+router.post('/create_bookCategory',Authenticate.Validate_User([Authenticate.ROLE.Admin,Authenticate.ROLE.Librarian]),
 celebrate(createBookCategorySchema),book_categoryController.createBookCategory);
 
 //Update Book category
-router.put('/update_bookCategory/:id',Authenticate.Validate_Admin_or_Librarian,
+router.put('/update_bookCategory/:id',Authenticate.Validate_User([Authenticate.ROLE.Admin,Authenticate.ROLE.Librarian]),
 celebrate(updateBookCategorySchema),book_categoryController.updateBookCategory);
 
 //Delete Book category
-router.put('/delete_bookCategory/:id',Authenticate.Validate_Admin_or_Librarian,
+router.put('/delete_bookCategory/:id',Authenticate.Validate_User([Authenticate.ROLE.Admin,Authenticate.ROLE.Librarian]),
 celebrate(deleteBookCategorySchema),book_categoryController.deleteBookCategory);
 
 //Get All Book category
-router.get('/get_allBookCategory',Authenticate.Validate_Admin_or_Librarian,
+router.get('/get_allBookCategory',Authenticate.Validate_User([Authenticate.ROLE.Admin,Authenticate.ROLE.Librarian]),
 book_categoryController.getAllBookCategory);
+
 
 export = router

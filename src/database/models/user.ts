@@ -1,4 +1,3 @@
-import { Unique } from "sequelize-typescript"
 
 const UserModel = (sequelize: any, DataTypes: any) => {
     const User = sequelize.define(
@@ -53,19 +52,7 @@ const UserModel = (sequelize: any, DataTypes: any) => {
           },
           LastLoginAt: {
             type: DataTypes.DATE
-          },
-          createdAt: {
-            allowNull: false,
-            type: DataTypes.DATE
-          },
-          updatedAt: {
-            allowNull: false,
-            type: DataTypes.DATE
-          },
-          deletedAt: {
-            allowNull: true,
-            type: DataTypes.DATE
-        }
+          }
       },
       {
         timestamps: true,

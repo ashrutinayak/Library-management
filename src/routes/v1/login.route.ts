@@ -1,14 +1,11 @@
-import express from "express"; 
-import { Request, Response, RequestHandler } from "express";
-import { celebrate } from 'celebrate';
+import express from "express";
+import { celebrate } from "celebrate";
 import loginController from "../../controllers/login.controller";
 import loginSchema from "../../validations/login.validation";
 const router: express.Router = express.Router();
 
-const {
-    loginUserSchema
-} =  loginSchema
+const { loginUserSchema } = loginSchema;
 
-router.post('/',celebrate(loginUserSchema),loginController.Login);
+router.post("/", celebrate(loginUserSchema), loginController.Login);
 
-export=router;
+export = router;

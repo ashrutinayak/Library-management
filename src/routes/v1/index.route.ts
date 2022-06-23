@@ -1,5 +1,4 @@
 import express from "express"; 
-import { Request, Response, RequestHandler } from "express";
 import customer from "./customer.route";
 import librarin from "./librarian.route";
 import admin from "./admin.route";

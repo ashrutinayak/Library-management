@@ -1,4 +1,3 @@
-import { Unique } from "sequelize-typescript"
 
 const issuedBookModel = (sequelize: any, DataTypes: any) => {
     const issuedBook = sequelize.define(
@@ -52,14 +51,6 @@ const issuedBookModel = (sequelize: any, DataTypes: any) => {
           status: {
             type: DataTypes.SMALLINT,
             comment: '1:Issued, 2:Renew, 3:Submitted, 4:Lost'
-          },
-          createdAt: {
-            allowNull: false,
-            type: DataTypes.DATE
-          },
-          updatedAt: {
-            allowNull: false,
-            type: DataTypes.DATE
           }
       },
       {
