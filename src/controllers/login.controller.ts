@@ -1,48 +1,58 @@
 import { RequestHandler, Request, Response } from "express";
-import sequelize from "sequelize";
 import models from "../config/model.config";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import messageConstant from "../constants/message.constant"
-import bcrypt from "bcrypt"
-import {createData, createToken, mg} from "../helpers/mail.helper"
-import { createToken_fp, createData_fp } from "../helpers/forgotPass.helper";
+import jwt from "jsonwebtoken";
+import messageConstant from "../constants/message.constant";
+import httpStatusConstant from "../constants/httpStatusCode.constant";
+import bcrypt from "bcrypt";
 
-const Login:RequestHandler = async(req,res)=>{
-    try{
-        const User1 = await models.User.findOne({where:{Email:req.body.Email}});
-        if(User1 && User1.Status===1) // User must be in active state 
-        {
-            const isSame = await bcrypt.compare(req.body.Password,User1.Password!);
-            if(isSame || (User1.RoleID===3 && req.body.Password===User1.Password!))
-            {
-                const userEmail = req.body.Email;
-                const token = jwt.sign({userEmail},process.env.SECRET_KEY!,{expiresIn:'10h'});
-                User1.Token = token;
-                const updUser = await models.User.
-                update({Token:User1.Token,LastLoginAt:new Date()},{where:{Email:userEmail}});
-                   
-                return res.status(200)
-                    .setHeader("token", token)
-                    .json({ message: "login successfully" });
-            }
-            else
-            {
-                return res.status(401)
-                .json({ message: "Invalid Username or Password" });
-            }
+const Login: RequestHandler = async (req, res) => {
+  try {
+    const findUser = await models.User.findOne({
+      where: { Email: req.body.Email },
+    });
+    if (findUser && findUser.Status === 1) {
+      // User must be in active state
+      const isSame = await bcrypt.compare(
+        req.body.Password,
+        findUser.Password!
+      );
+      if (
+        isSame ||
+        (findUser.RoleID === 3 && req.body.Password === findUser.Password!)
+      ) {
+        const userEmail = req.body.Email;
+        const token = jwt.sign({ userEmail }, process.env.SECRET_KEY!, {
+          expiresIn: "24h",
+        });
+        findUser.Token = token;
+        const updateUser = await models.User.update(
+          { Token: findUser.Token, LastLoginAt: new Date() },
+          { where: { Email: userEmail } }
+        );
+        if (updateUser) {
+          return res.successResponse(
+            httpStatusConstant.OK,
+            messageConstant.loginSuccess,
+            { accessToken: token }
+          );
         }
-        return res.status(400).json({ message: "No User Found with this Email ID" });
+      } else {
+        return res.failResponse(
+          httpStatusConstant.UNAUTHORIZED,
+          messageConstant.unauthorizedUser
+        );
+      }
     }
-    catch(error)
-    {
-        console.log(error);
-            res.status(500).json({
-                error:error,
-            });
-    }
-    
-}
+    return res.failResponse(
+      httpStatusConstant.NOT_FOUND,
+      messageConstant.noUserFoundorActive
+    );
+  } catch (error) {
+    console.log(error);
+    res.failResponse(httpStatusConstant.INTERNAL_SERVER_ERROR, null, error);
+  }
+};
 
 export default {
-    Login
-}
+  Login,
+};

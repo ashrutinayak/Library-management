@@ -1,0 +1,46 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/item.css">
+<link rel="stylesheet" href="/css/forms.css"
+</head>
+<%- include('../includes/navigation.ejs') %>
+<body>
+    <main>
+        <form class="product-form"action="/v1/customer/create_customer" method="POST">
+            <div class="form-control">
+                <label for="FirstName">FirstName</label>
+                <input type="text"  name="FirstName" id="FirstName">
+            </div>
+            <div class="form-control">
+                <label for="LastName">LastName</label>
+                <input type="text"  name="LastName" id="LastName">
+            </div>
+            
+            <div class="form-control">
+                <label for="Email">Email</label>
+                <input type="text"  name="Email" id="Email">
+            </div>
+            
+            <div class="form-control">
+                <label for="Password">Password</label>
+                <input type="password"  name="Password" id="Password">
+            </div>
+            
+            <div class="form-control">
+                <label for="Confirm_Password">Confirm_Password</label>
+                <input type="password"  name="Confirm_Password" id="Confirm_Password">
+            </div>
+            
+            <div class="form-control">
+                <label for="file">Profile_Image</label>
+                <input type="file"  name="file" id="file">
+            </div>
+            
+            <div class="form-control">
+                <button class="btn" type="submit">Register</button>
+            </div>
+            
+        </form>
+    </main>
+</body>
+</html>
+

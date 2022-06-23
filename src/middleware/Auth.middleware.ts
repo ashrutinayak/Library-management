@@ -1,121 +1,61 @@
-import { RequestHandler,Request,Response } from "express";
-import jwt from 'jsonwebtoken';
+import { RequestHandler, Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 import messageConstant from "../constants/message.constant";
 import models from "../config/model.config";
-import { nextTick } from "process";
+import httpStatusConstant from "../constants/httpStatusCode.constant";
 
-const Validate_Admin:RequestHandler = async(req,res,next)=>{
-    const token = req.headers.authorization || req.header('x-auth');
-    try{
-        const decodedtoken:any = jwt.verify(token,process.env.SECRET_KEY!);
-        if(!decodedtoken)
-        {
-            return res.status(400).json({message:messageConstant.invalidToken})
-        }
-        const {userEmail} = decodedtoken;
-        const User1 = await models.User.findOne({where:{Email:userEmail}});
-        if(User1 && User1.RoleID===3)
-        {
-            req.body.UserID = User1.id;
-            next();
-        }
-        else
-        {
-            return res.status(401).json({message:messageConstant.unauthorizedUser})
-        }
-    }
-    catch(error)
-    {
-        console.log(error);
-        res.status(500).json({error:error,});
-    }
-}
+const ROLE = {
+  Customer: 1,
+  Librarian: 2,
+  Admin: 3,
+};
 
-const Validate_Customer:RequestHandler = async(req,res,next)=>{
-    const token = req.headers.authorization || req.header('x-auth');
-    try{
-        const decodedtoken:any = jwt.verify(token,process.env.SECRET_KEY!);
-        if(!decodedtoken)
-        {
-            return res.status(400).json({message:messageConstant.invalidToken})
-        }
-        const {userEmail} = decodedtoken;
-        const User1 = await models.User.findOne({where:{Email:userEmail}});
-        if(User1 && User1.RoleID===1)
-        {
-            req.body.UserID = User1.id;
-            next();
-        }
-        else
-        {
-            return res.status(401).json({message:messageConstant.unauthorizedUser})
-        }
+const Validate_User = (userRole: number[]) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const bearerHeader = req.headers["authorization"];
+      if (!bearerHeader) {
+        return res.failResponse(
+          httpStatusConstant.NOT_FOUND,
+          messageConstant.tokenNotFound
+        );
+      }
+      const bearer = bearerHeader.split(" ");
+      const token = bearer[1];
+      const decodedtoken: any = jwt.verify(token, process.env.SECRET_KEY!);
+      if (!decodedtoken) {
+        return res.failResponse(
+          httpStatusConstant.INVALID_TOKEN,
+          messageConstant.invalidToken
+        );
+      }
+      const { userEmail } = decodedtoken;
+      const findUser = await models.User.findOne({
+        where: { Email: userEmail },
+      });
+      if (
+        findUser &&
+        (findUser.RoleID === userRole[0] ||
+          findUser.RoleID === userRole[1] ||
+          findUser.RoleID === userRole[2])
+      ) {
+        req.body.UserID = findUser.id;
+        next();
+      } else {
+        return res.failResponse(
+          httpStatusConstant.UNAUTHORIZED,
+          messageConstant.unauthorizedUser
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      res.failResponse(httpStatusConstant.INTERNAL_SERVER_ERROR, null, {
+        error: error,
+      });
     }
-    catch(error)
-    {
-        console.log(error);
-        res.status(500).json({error:error,});
-    }
-}
-
-const Validate_Librarian:RequestHandler = async(req,res,next)=>{
-    const token = req.headers.authorization || req.header('x-auth');
-    try{
-        const decodedtoken:any = jwt.verify(token,process.env.SECRET_KEY!);
-        if(!decodedtoken)
-        {
-            return res.status(400).json({message:messageConstant.invalidToken})
-        }
-        const {userEmail} = decodedtoken;
-        const User1 = await models.User.findOne({where:{Email:userEmail}});
-        if(User1 && User1.RoleID===2)
-        {
-            req.body.UserID = User1.id;
-            next();
-        }
-        else
-        {
-            return res.status(401).json({message:messageConstant.unauthorizedUser})
-        }
-    }
-    catch(error)
-    {
-        console.log(error);
-        res.status(500).json({error:error,});
-    }
-}
-
-const Validate_Admin_or_Librarian:RequestHandler = async(req,res,next)=>{
-    const token = req.headers.authorization || req.header('x-auth');
-    try{
-        const decodedtoken:any = jwt.verify(token,process.env.SECRET_KEY!);
-        if(!decodedtoken)
-        {
-            return res.status(400).json({message:messageConstant.invalidToken})
-        }
-        const {userEmail} = decodedtoken;
-        const User1 = await models.User.findOne({where:{Email:userEmail}});
-        if(User1 && (User1.RoleID===3 || User1.RoleID===2))
-        {
-            req.body.UserID=User1.id;
-            next();
-        }
-        else
-        {
-            return res.status(401).json({message:messageConstant.unauthorizedUser})
-        }
-    }
-    catch(error)
-    {
-        console.log(error);
-        res.status(500).json({error:error,});
-    }
-}
-
-
+  };
+};
 export default {
-    Validate_Admin,
-    Validate_Customer,
-    Validate_Librarian,
-    Validate_Admin_or_Librarian
-}
+  Validate_User,
+  ROLE,
+};

@@ -1,0 +1,46 @@
+<%- include('includes/head.ejs') %>
+<link rel="stylesheet" href="/css/item.css">
+<link rel="stylesheet" href="/css/forms.css"
+
+</head>
+
+    <%- include('includes/navigation.ejs') %>
+    <main>
+        <% if (data) { %>
+            <div class="grid">
+                <% for(let x in data) { %>
+                    <article class="card product-item">
+                        <header class="card__header">
+                            <h1 class="product__title">
+                             Book name:-  <%=data[x].bookName %>
+                            </h1>
+                        </header>
+                        <div class="card__image">
+                            <img src="https://macmillan-dam.captureweb.co.uk/cdn/macmillan/previews/439664/d2600cec4c0f09bf8e6187a83a066343/0/14665546cf5662d409143d004ffc0c54/131898933.jpg" alt="<%= data[x].bookName %>">
+                        </div>
+                        <div class="card__content">
+                            
+                            <h2 class="product__price">
+                                Author :-<%=data[x].author %>
+                             </h2>
+                             <h2 class="product__price">
+                                Category :-<%=data[x].bookCategory %>
+                             </h2>
+                             <h2 class="product__price">
+                                InStock :-<%=data[x].inStock %>
+                             </h2>
+                             <h2 class="product__price">
+                                CurrentlyAvailable :-<%=data[x].currentlyAvailable %>
+                             </h2>
+                        </div>
+                    </article>
+                    <% } %>
+            </div>
+        <% } else { %>
+                <h1>No Book Found!</h1>
+         <% } %>
+    </main>
+
+</body>
+</html>
+

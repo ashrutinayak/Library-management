@@ -1,0 +1,7 @@
+{
+    "extends": [ "wesbos/typescript" ],
+    "rules": {"no-unused-vars":[1,
+        {
+            "argsIgnorePattern":"res|next|^err"
+        }]}
+}

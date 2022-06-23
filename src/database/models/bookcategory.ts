@@ -22,18 +22,7 @@ const bookCategoryModel = (sequelize: any, DataTypes: any) => {
           },
           updateUserID: {
             type: DataTypes.INTEGER
-          },
-          createdAt: {
-            allowNull: false,
-            type: DataTypes.DATE
-          },
-          updatedAt: {
-            allowNull: false,
-            type: DataTypes.DATE
-          },
-          deletedAt: {
-            type: DataTypes.DATE
-        }
+          }
       },
       {
         timestamps: true,

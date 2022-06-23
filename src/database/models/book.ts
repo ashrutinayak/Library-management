@@ -45,18 +45,6 @@ const BookModel = (sequelize: any, DataTypes: any) => {
           },
           updatedUserID: {
             type: DataTypes.INTEGER
-          },
-          createdAt: {
-            allowNull: false,
-            type: DataTypes.DATE
-          },
-          updatedAt: {
-            allowNull: false,
-            type: DataTypes.DATE
-          },
-          deletedAt: {
-            allowNull: true,
-            type: DataTypes.DATE
           }
       },
       {
